@@ -6,6 +6,7 @@ var forms = multer({limits: { fieldSize: 10*1024*1024 }});
 app.use(forms.array()); 
 const cors = require('cors');
 app.use(cors());
+const https = require('https');
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.json({limit : '50mb' }));  
@@ -277,7 +278,10 @@ async function myFetch(url, options) {
   const {timeout, ...fetchOptions} = options;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout||30000)
-  const res = await fetch(url, {...fetchOptions,signal:controller.signal},agent: new https.Agent({ rejectUnauthorized: false }));
+  const res = await fetch(url, {...fetchOptions,
+    signal:controller.signal,
+    agent: new https.Agent({ rejectUnauthorized: false })
+  });
   clearTimeout(timeoutId);
   return res;
 }

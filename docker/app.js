@@ -277,7 +277,7 @@ async function myFetch(url, options) {
   const {timeout, ...fetchOptions} = options;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout||30000)
-  const res = await fetch(url, {...fetchOptions,signal:controller.signal});
+  const res = await fetch(url, {...fetchOptions,signal:controller.signal},agent: new https.Agent({ rejectUnauthorized: false }));
   clearTimeout(timeoutId);
   return res;
 }
